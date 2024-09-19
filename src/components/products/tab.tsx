@@ -1,18 +1,42 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { categories } from '@/components/products/category'
+import { EmptyProducts } from '@/components/products/empty'
+import { ProductItem } from '@/components/products/product-item'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { getAllProducts } from '@/services/product'
 
-export const ProductsTab = () => {
+export const ProductsTab = async () => {
+  const products = await getAllProducts()
+
   return (
-    <Tabs defaultValue="tab1">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="tab1">Tab 1</TabsTrigger>
-        <TabsTrigger value="tab2">Tab 2</TabsTrigger>
+    <Tabs defaultValue={products[0].category} className="w-full">
+      <TabsList className="w-full">
+        {categories.map(category => (
+          <TabsTrigger
+            className="flex-1"
+            key={category.value}
+            value={category.value}
+          >
+            {category.title}
+          </TabsTrigger>
+        ))}
       </TabsList>
-      <TabsContent className="mt-6" value="tab1">
-        Conteúdo Tab 1
-      </TabsContent>
-      <TabsContent className="mt-6" value="tab2">
-        Conteúdo Tab 2
-      </TabsContent>
+
+      {categories.map(category => (
+        <TabsContent key={category.value} value={category.value}>
+          {/* LISTA DE PRODUTOS */}
+          {category.products.length > 0 && (
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+              {category.products.map(product => (
+                <ProductItem key={product.id} product={product} />
+              ))}
+            </ul>
+          )}
+
+          {/* SEM PRODUTOS */}
+          {category.products.length === 0 && <EmptyProducts />}
+        </TabsContent>
+      ))}
+      <TabsContent value="password">Change your password here.</TabsContent>
     </Tabs>
   )
 }

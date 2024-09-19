@@ -11,7 +11,6 @@ const Home = () => {
       <Header />
       <main className="flex-1 px-5 py-8">
         <ContainerPage>
-          <TabsSkeleton />
           <Suspense fallback={<TabsSkeleton />}>
             <ProductsTab />
           </Suspense>
