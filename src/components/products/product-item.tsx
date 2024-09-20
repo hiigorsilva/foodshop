@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { ToastAction } from '@/components/ui/toast'
 import { formatCurrency } from '@/function/format-currency'
 import { useToast } from '@/hooks/use-toast'
+import { useCartStore } from '@/stores/cart-store'
 import type { Product } from '@/types/product'
+import { ShoppingCartIcon } from 'lucide-react'
 import Image from 'next/image'
 
 type Props = {
@@ -13,8 +15,11 @@ type Props = {
 
 export const ProductItem = ({ product }: Props) => {
   const { toast } = useToast()
+  const { upsertCartItem } = useCartStore(state => state)
 
   const handleAddToCart = () => {
+    upsertCartItem(product, 1)
+
     toast({
       title: 'Produto adicionado ao carrinho',
       description: product.name,
@@ -34,6 +39,8 @@ export const ProductItem = ({ product }: Props) => {
           className="object-cover"
           src={product.image}
           alt={product.name}
+          sizes="(max-width: 768px) 100vw, 500px"
+          priority
           fill
         />
       </div>
@@ -47,11 +54,12 @@ export const ProductItem = ({ product }: Props) => {
         </div>
 
         <Button
-          className="w-full font-semibold text-sm bg-green-500 rounded"
+          className="w-full gap-2 font-semibold text-sm bg-green-500 rounded"
           onClick={handleAddToCart}
           size="sm"
         >
-          Adicionar ao carrinho
+          <ShoppingCartIcon className="size-4" />
+          Adicionar
         </Button>
       </div>
     </li>
