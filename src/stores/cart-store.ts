@@ -20,7 +20,7 @@ export const useCartStore = create<States & Actions>(set => ({
       const productIndex = state.cart.findIndex(
         prod => prod.product.id === product.id
       )
-      const hasThisProduct = productIndex <= 0
+      const hasThisProduct = productIndex < 0
 
       const updatedCart = hasThisProduct
         ? [...state.cart, { product, quantity }]

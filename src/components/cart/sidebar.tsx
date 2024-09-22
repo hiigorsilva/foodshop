@@ -3,11 +3,14 @@
 import { formatCurrency } from '@/function/format-currency'
 import { useCartStore } from '@/stores/cart-store'
 import { ShoppingCartIcon } from 'lucide-react'
+import { useState } from 'react'
+import { ModalCheckout } from '../checkout/modal'
 import { Button } from '../ui/button'
 import { Separator } from '../ui/separator'
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -17,8 +20,12 @@ import { CartItem } from './item'
 
 export const CartSidebar = () => {
   const { cart } = useCartStore(state => state)
+  const [checkoutIsOpen, setCheckoutIsOpen] = useState<boolean>(false)
 
-  const subtotal = cart.reduce((total, item) => total + item.product.price, 0)
+  const subtotal = cart.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  )
 
   return (
     <Sheet>
@@ -44,6 +51,8 @@ export const CartSidebar = () => {
             <ShoppingCartIcon className="size-5" strokeWidth={2} />
             Meu carrinho
           </SheetTitle>
+
+          <SheetDescription>Resumo de seus produtos.</SheetDescription>
           <Separator />
         </SheetHeader>
 
@@ -65,16 +74,25 @@ export const CartSidebar = () => {
             <span>{formatCurrency(subtotal)}</span>
           </div>
 
+          <Separator />
+
           {/* FINALIZAR */}
           <div className="flex justify-center items-center">
             <Button
-              className="w-full sm:w-fit bg-green-500"
+              onClick={() => setCheckoutIsOpen(true)}
+              className="w-full bg-green-500"
               disabled={cart.length === 0}
             >
               Finalizar pedido
             </Button>
           </div>
         </div>
+
+        {/* CHECKOUT */}
+        <ModalCheckout
+          isOpen={checkoutIsOpen}
+          onOpenChange={setCheckoutIsOpen}
+        />
       </SheetContent>
     </Sheet>
   )
