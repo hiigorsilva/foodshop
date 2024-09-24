@@ -1,11 +1,4 @@
-import { useCheckoutStore } from '@/stores/checkout-store'
-import type { CheckoutSteps } from '@/types/checkout-steps'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRightIcon } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -13,13 +6,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form'
-import { Input } from '../ui/input'
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { useCheckoutStore } from '@/stores/checkout-store'
+import type { CheckoutSteps } from '@/types/checkout-steps'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowRightIcon } from 'lucide-react'
+import type { Dispatch, SetStateAction } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const formSchema = z.object({
-  name: z
-    .string({ message: 'Prencha o campo nome' })
-    .min(2, 'Digite ao menos 2 caracteres'),
+  name: z.string().min(2, 'Digite ao menos 2 caracteres'),
 })
 
 type StepUserProps = {
@@ -34,7 +32,7 @@ export const StepUser = ({ setStep }: StepUserProps) => {
     defaultValues: { name },
   })
 
-  const handleOnSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
     setName(values.name)
     setStep('address')
   }
@@ -42,7 +40,7 @@ export const StepUser = ({ setStep }: StepUserProps) => {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleOnSubmit)}
+        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-3"
       >
         <FormField
@@ -58,7 +56,7 @@ export const StepUser = ({ setStep }: StepUserProps) => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="gap-2 ml-auto">
+        <Button type="submit" size="sm" className="gap-2 ml-auto">
           Avançar
           <ArrowRightIcon className="size-4" />
         </Button>

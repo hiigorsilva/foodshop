@@ -46,13 +46,20 @@ export const CartSidebar = () => {
 
       <SheetContent className="max-h-dvh h-full flex flex-col gap-6 bg-zinc-900">
         {/* HEADER */}
-        <SheetHeader className="w-full h-fit space-y-6">
+        <SheetHeader className="w-full h-fit space-y-4">
           <SheetTitle className="flex items-center gap-3">
             <ShoppingCartIcon className="size-5" strokeWidth={2} />
             Meu carrinho
           </SheetTitle>
 
-          <SheetDescription>Resumo de seus produtos.</SheetDescription>
+          <SheetDescription className="flex justify-between items-center gap-3">
+            <div className="flex items-center gap-1 text-sm text-zinc-400">
+              <span className="block w-fit text-xs bg-zinc-800 rounded px-2 py-0.5">
+                {cart.length | 0}
+              </span>{' '}
+              produto{cart.length > 1 && 's'} no carrinho
+            </div>
+          </SheetDescription>
           <Separator />
         </SheetHeader>
 

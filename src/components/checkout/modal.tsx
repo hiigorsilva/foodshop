@@ -45,10 +45,10 @@ export const ModalCheckout = ({ isOpen, onOpenChange }: ModalCheckoutProps) => {
           <DialogTitle>
             {step === 'user' && 'Dados do cliente'}
             {step === 'address' && 'Dados da entrega'}
-            {step === 'finish' && 'Enviar ao WhatsApp'}
+            {step === 'finish' && 'Finalizar pedido'}
           </DialogTitle>
           <DialogDescription>
-            Preencha os dados do seu pedido.
+            {step !== 'finish' && 'Preencha os dados do seu pedido.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -57,7 +57,7 @@ export const ModalCheckout = ({ isOpen, onOpenChange }: ModalCheckoutProps) => {
         <div className="flex flex-col gap-3">
           {step === 'user' && <StepUser setStep={setStep} />}
           {step === 'address' && <StepAdress setStep={setStep} />}
-          {step === 'finish' && <StepFinish />}
+          {step === 'finish' && <StepFinish setStep={setStep} />}
         </div>
       </DialogContent>
     </Dialog>

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -6,36 +7,30 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { listStates } from '@/data/form-checkout/list-states'
-import { useCheckoutStore } from '@/stores/checkout-store'
-import type { CheckoutSteps } from '@/types/checkout-steps'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
-import type { Dispatch, SetStateAction } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select'
+} from '@/components/ui/select'
+import { listStates } from '@/data/form-checkout/list-states'
+import { useCheckoutStore } from '@/stores/checkout-store'
+import type { CheckoutSteps } from '@/types/checkout-steps'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
+import type { Dispatch, FormEvent, SetStateAction } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const formSchema = z.object({
-  street: z.string({ message: 'Preencha o campo de endereço' }).min(2),
-  number: z.string({ message: 'Preencha o campo de número' }).min(2),
-  complement: z
-    .string()
-    .min(2, 'Complemento precisa ter ao menos 2 caracteres')
-    .optional(),
-  district: z
-    .string({ message: 'Preencha o campo de bairro' })
-    .min(2, 'Bairro precisa ao menos 2 caracteres'),
-  city: z.string({ message: 'Cidade precisa ao menos 2 caracteres' }).min(2),
-  state: z.string({ message: 'Preencha o campo de Estado' }).min(2),
+  street: z.string().min(5, 'Preencha o endereço'),
+  number: z.string().min(1, 'Preencha o número'),
+  complement: z.string().optional(),
+  district: z.string().min(2, 'Preencha o bairro'),
+  city: z.string().min(2, 'Preencha a cidade'),
+  state: z.string().min(2, 'Preencha o Estado'),
 })
 
 type StepAddressProps = {
@@ -50,14 +45,14 @@ export const StepAdress = ({ setStep }: StepAddressProps) => {
     defaultValues: { ...address },
   })
 
-  const handleOnSubmit = (values: z.infer<typeof formSchema>) => {
-    setAddress(values)
-    setStep('address')
+  const onSubmit = (formFields: z.infer<typeof formSchema>) => {
+    setAddress(formFields)
+    setStep('finish')
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleOnSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
@@ -101,10 +96,10 @@ export const StepAdress = ({ setStep }: StepAddressProps) => {
 
           <FormField
             control={form.control}
-            name="city"
+            name="district"
             render={({ field }) => (
               <FormItem className="space-y-1">
-                <FormLabel>Cidade</FormLabel>
+                <FormLabel>Bairro</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -114,10 +109,10 @@ export const StepAdress = ({ setStep }: StepAddressProps) => {
 
           <FormField
             control={form.control}
-            name="district"
+            name="city"
             render={({ field }) => (
               <FormItem className="space-y-1">
-                <FormLabel>Bairro</FormLabel>
+                <FormLabel>Cidade</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -159,21 +154,16 @@ export const StepAdress = ({ setStep }: StepAddressProps) => {
 
         <div className="flex justify-between items-center gap-3">
           <Button
-            onClick={() => setStep('user')}
-            variant="link"
             size="sm"
-            className="gap-2 border border-zinc-800"
+            variant="link"
+            onClick={() => setStep('user')}
+            className="gap-2"
           >
             <ArrowLeftIcon className="size-4" />
             Voltar
           </Button>
 
-          <Button
-            onClick={() => setStep('finish')}
-            type="submit"
-            size="sm"
-            className="gap-2"
-          >
+          <Button size="sm" type="submit" className="gap-2">
             Avançar
             <ArrowRightIcon className="size-4" />
           </Button>
